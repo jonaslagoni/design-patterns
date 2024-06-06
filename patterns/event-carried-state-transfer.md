@@ -1,11 +1,12 @@
 ## Event carried state transfer (ECST)
 counter parts: Event-notification
-Instead of simply saying `the address of user x has changed`, ECST carries related information with it so it becomes more verbose `user x has a new address y and the old address was z`. It is a way of sharing data across systems, by choosing how much data/information do you want each event to contain? 
 
-It splits out into two at least two approaches, fine grained, fine grained snapshots and snapshots.
+Instead of simply saying `the address of user x has changed`, ECST means events carry related information with it, to become more verbose, so it tells exactly what changed `user x has a new address y and the old address was z`. It is a way of sharing data across systems, so it becomes a question of how much data/information do you want each event to contain? 
+
+It splits out into two at least 3 approaches, fine grained (Delta events), fine grained snapshots and snapshots (fat events).
 
 ### Fine grained
-Fine grained is the smallest amount of data that can be send using ECST, which simply answers "what has changed specifically?".
+Fine grained is the smallest amount of data that can be send using ECST, which simply answers "what has specifically changed?".
 
 - Good when services each has a copy of the data and just need to apply the change them self
 -
@@ -136,7 +137,7 @@ You must make sure that the consumers are idempotent (stateless?) as processing 
 
 With more verbose events, the more PII comes into play.
 
-You will have eventual-consistency across producer/data owner/ and consumer.
+You will have eventual-consistency across producer/data owner/ and consumers (and even across consumers). "This inconsistency may only last for a few milliseconds but, in a high-traffic system that sends out thousands of ECS messages, the likelihood of an inconsistent read increases rapidly." (https://blogs.mulesoft.com/api-integration/strategy/event-carried-state-messages/)
 
 Consumer:
 ```json
@@ -144,7 +145,7 @@ Consumer:
   "asyncapi": "3.0.0",
   "info": {
     "title": "Account Service",
-    "version": "1.0.0",
+    "version": "1.0.0"
   },
   "channels": {
     "addressChanged": {
@@ -312,4 +313,5 @@ Further resources:
 - https://medium.com/swlh/event-notification-vs-event-carried-state-transfer-2e4fdf8f6662
 - https://solace.com/event-driven-architecture-patterns/
 - https://blogs.mulesoft.com/api-integration/strategy/event-carried-state-messages/
+- https://itnext.io/the-event-carried-state-transfer-pattern-aae49715bb7f
 - 
