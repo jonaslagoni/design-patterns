@@ -1,0 +1,4 @@
+site_name: EDA Design patterns
+theme:
+  name: material
+docs_dir: patterns
