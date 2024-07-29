@@ -1,6 +1,6 @@
 ---
 title: Glossaries
-description: This is a pattern example, description
+description: The glossaries sections helps create a common language for the design patterns
 ---
 
 # Glossaries
