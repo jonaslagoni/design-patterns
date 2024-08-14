@@ -142,7 +142,7 @@ You must make sure that the consumers are [idempotent](../glossary.md) as proces
 
 With more verbose events, the more [PII](../glossary.md) comes into play.
 
-You will have [eventual-consistency](.../glossary.md) across producer/data owner - and consumers (and even across consumers). "This inconsistency may only last for a few milliseconds but, in a high-traffic system that sends out thousands of ECS messages, the likelihood of an inconsistent read increases rapidly." (https://blogs.mulesoft.com/api-integration/strategy/event-carried-state-messages/)
+You will have [eventual-consistency](../glossary.md) across producer/data owner - and consumers (and even across consumers). "This inconsistency may only last for a few milliseconds but, in a high-traffic system that sends out thousands of ECS messages, the likelihood of an inconsistent read increases rapidly." (https://blogs.mulesoft.com/api-integration/strategy/event-carried-state-messages/)
 
 Example AsyncAPI document for a consumer:
 ```json
