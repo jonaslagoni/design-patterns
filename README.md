@@ -2,9 +2,10 @@
 
 ## Roadmap
 
-- [ ] Add ECST pattern
-- [ ] Basic doc rendering
-- [ ] Github pages
+- [X] Add ECST pattern
+- [X] Add CQRS pattern
+- [X] Basic doc rendering
+- [X] Github pages
 - [ ] Publish-Subscribe pattern
 
 
