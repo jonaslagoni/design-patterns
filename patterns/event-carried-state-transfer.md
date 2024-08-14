@@ -1,3 +1,8 @@
+---
+title: Event Carried State Transfer (ECST)
+description: Event Carried State Transfer define different verboseness of the message payloads such as fine grained and snapshots.
+---
+
 ## Event carried state transfer (ECST)
 counter parts: Event-notification
 
@@ -9,8 +14,8 @@ It splits out into two at least 3 approaches, fine grained ([Delta events](./glo
 Fine grained is the smallest amount of data that can be send using ECST, which simply answers "what has specifically changed?".
 
 - Good when services each has a copy of the data and just need to apply the change them self
--
 
+Example for `Fine Grained payload` structure:
 ```json
 {
   "addressId": "12366",
@@ -27,8 +32,8 @@ Fine grained is the smallest amount of data that can be send using ECST, which s
 Fine grained snapshots include a all the information about the object that changed so you always have access to the complete picture in the event.
 
 - Good if you debug event streams (without the context of applications) to full picture of the state.
--
 
+Example for `Fine grained snapshots` payload structure:
 ```json
 {
   "addressId": "12366",
@@ -52,9 +57,9 @@ Fine grained snapshots include a all the information about the object that chang
 ```
 
 ### Snapshots
-Snapshots take a further step back, and look at the greater object that address belongs to, for example customer, and give you the current snapshot of that state of that object;
-- How do you use this?
+Snapshots take a further step back, and look at the greater object that address belongs to, for example customer, and give you the current snapshot of that state of that object. That way you only need to look at the event itself to know the state of the entity.
 
+Example for `Snapshot` payload structure:
 ```json
 {
   "customerId": "911000100",
@@ -137,9 +142,9 @@ You must make sure that the consumers are [idempotent](./glossary.md) as process
 
 With more verbose events, the more [PII](./glossary.md) comes into play.
 
-You will have [eventual-consistency](./glossary.md) across producer/data owner/ and consumers (and even across consumers). "This inconsistency may only last for a few milliseconds but, in a high-traffic system that sends out thousands of ECS messages, the likelihood of an inconsistent read increases rapidly." (https://blogs.mulesoft.com/api-integration/strategy/event-carried-state-messages/)
+You will have [eventual-consistency](../glossary.md) across producer/data owner - and consumers (and even across consumers). "This inconsistency may only last for a few milliseconds but, in a high-traffic system that sends out thousands of ECS messages, the likelihood of an inconsistent read increases rapidly." (https://blogs.mulesoft.com/api-integration/strategy/event-carried-state-messages/)
 
-Consumer:
+Example AsyncAPI document for a consumer:
 ```json
 {
   "asyncapi": "3.0.0",
@@ -310,6 +315,7 @@ Consumer:
 ```
 
 Further resources:
+
 - https://medium.com/swlh/event-notification-vs-event-carried-state-transfer-2e4fdf8f6662
 - https://solace.com/event-driven-architecture-patterns/
 - https://blogs.mulesoft.com/api-integration/strategy/event-carried-state-messages/
