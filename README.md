@@ -6,7 +6,25 @@
 - [X] Add CQRS pattern
 - [X] Basic doc rendering
 - [X] Github pages
+- [ ] Event Sourcing
+- [ ] Change Data Capture (CDC)
+
+Communication Patterns
+- [ ] Request-Reply
+- [ ] point-to-point
+- [ ] event streaming
 - [ ] Publish-Subscribe pattern
+
+Consumer Scalability / Patterns
+- [ ] consumer groups
+- [ ] partitioning
+- [ ] Exclusive Consumer (HA)
+
+Error Handling Patterns
+- [ ] dead letter queue
+- [ ] discard
+- [ ] pause and retry
+- [ ] saga
 
 
 ## Preview the website locally
