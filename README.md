@@ -1,7 +1,8 @@
-[![AsyncAPI Modelina](./assets/banner.png)](https://jonaslagoni.github.io/design-patterns)
+[![Design patterns](./docs/assets/images/banner.png)](https://jonaslagoni.github.io/design-patterns)
+
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![last commit](https://img.shields.io/github/last-commit/jonaslagoni/design-patterns)](https://github.com/asyncapi/modelina/commits/master)
-[![Website](https://img.shields.io/website?label=website&url=https%3A%2F%2Fjonaslagoni.github.io/design-patterns/)](https://jonaslagoni.github.io/design-patterns/)  <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![last commit](https://img.shields.io/github/last-commit/jonaslagoni/design-patterns)](https://github.com/jonaslagoni/design-patterns/commits/main)
+[![Website](https://img.shields.io/website?label=website&url=https%3A%2F%2Fjonaslagoni.github.io%2Fdesign-patterns)](https://jonaslagoni.github.io/design-patterns/)  <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
