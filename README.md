@@ -1,4 +1,4 @@
-[![Design patterns](./docs/assets/images/banner.png)](https://jonaslagoni.github.io/design-patterns)
+[![Design patterns](./patterns/assets/images/banner.png)](https://jonaslagoni.github.io/design-patterns)
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![last commit](https://img.shields.io/github/last-commit/jonaslagoni/design-patterns)](https://github.com/jonaslagoni/design-patterns/commits/main)

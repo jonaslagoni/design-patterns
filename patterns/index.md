@@ -2,6 +2,8 @@
 title: Introduction
 ---
 
+[![Design patterns](./assets/images/banner.png)](https://jonaslagoni.github.io/design-patterns)
+
 
 # Welcome to EDA Design Patterns website
 
