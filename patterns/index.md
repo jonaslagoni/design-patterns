@@ -15,7 +15,7 @@ It includes a range of patterns used in EDA with a specific focus on how to desi
 - [X] [Add CQRS pattern](./command-query-responsibility-segregation.md)
 - [X] Basic doc rendering
 - [X] Github pages
-- [ ] Event Sourcing
+- [X] Event Sourcing
 - [ ] Change Data Capture (CDC)
 
 Communication Patterns
