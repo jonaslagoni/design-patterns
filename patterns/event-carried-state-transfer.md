@@ -3,7 +3,8 @@ title: Event Carried State Transfer (ECST)
 description: Event Carried State Transfer define different verboseness of the message payloads such as fine grained and snapshots.
 ---
 
-## Event carried state transfer (ECST)
+# Event carried state transfer (ECST)
+
 counter parts: Event-notification
 
 Instead of simply saying `the address of user x has changed`, ECST means events carry related information with it, to become more verbose, so it tells exactly what changed `user x has a new address y and the old address was z`. It is a way of sharing data across systems, so it becomes a question of how much data/information do you want each event to contain? 

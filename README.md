@@ -1,33 +1,8 @@
-# design-patterns
+# Design Patterns for AsyncAPI
 
-## Roadmap
+[jonaslagoni.github.io/design-patterns/](https://jonaslagoni.github.io/design-patterns/)
 
-- [X] Add ECST pattern
-- [X] Add CQRS pattern
-- [X] Basic doc rendering
-- [X] Github pages
-- [ ] Event Sourcing
-- [ ] Change Data Capture (CDC)
-
-Communication Patterns
-- [ ] Request-Reply
-- [ ] point-to-point
-- [ ] event streaming
-- [ ] Publish-Subscribe pattern
-
-Consumer Scalability / Patterns
-- [ ] consumer groups
-- [ ] partitioning
-- [ ] Exclusive Consumer (HA)
-
-Error Handling Patterns
-- [ ] dead letter queue
-- [ ] discard
-- [ ] pause and retry
-- [ ] saga
-
-
-## Preview the website locally
+## Spinning up the website locally
 
 ```
 python3 -m venv pyenv
