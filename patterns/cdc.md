@@ -23,19 +23,12 @@ This is the part of the system that keeps an eye on the database for any changes
 - **What It Does**: Watches the database and creates events for any changes.
 - **Examples**: AWS Database Migration Service (DMS), Apache Debezium.
 
-### Message Broker
-
-The Message Broker is like the middleman. It takes the change events from the CDC Producer and passes them along to whoever needs to know about them. It makes sure the events get to the right place and that they don’t get lost along the way.
-
-- **What It Does**: Moves the events from the producer to the consumers.
-- **Examples**: Kafka, Amazon SNS/SQS, RabbitMQ.
-
 ### CDC Consumers (Sinks)
 
 These are the systems that listen for the CDC events. When they get an event, they do something with it—like update their own database, trigger a workflow, or process the data in some way.
 
-- **What They Do**: React to the events by updating data, starting processes, etc.
-- **Examples**: Data warehouses like Redshift, microservices that need consistent data, real-time analytics systems.
+- **What They Do**: React to the events by updating data, starting processes, etc. They can also move events from producer to other consumers.
+- **Examples**: Data warehouses like Redshift, microservices that need consistent data, real-time analytics systems, message brokers (Kafka, Amazon SNS/SQS, RabbitMQ...)
 
 ## Where CDC is Used
 
@@ -57,7 +50,7 @@ info:
 
 servers:
   production:
-    url: broker.example.com:9092
+    host: broker.example.com:9092
     protocol: kafka
     description: 'Kafka broker for production'
 
@@ -75,7 +68,7 @@ operations:
     channel:
       $ref: '#/channels/InventoryCdcUpdates'
     messages:
-      - $ref: '#/components/messages/InventoryUpdateEvent'
+      - $ref: '#/channels/InventoryCdcUpdates/messages/InventoryUpdateEvent'
 
 components:
   messages:
@@ -110,8 +103,15 @@ components:
                 type: string
                 format: date-time
                 description: 'Timestamp when the inventory was last modified'
-
 ```
+
+
+<a href="https://studio.asyncapi.com/?base64=YXN5bmNhcGk6IDMuMC4wCmluZm86CiAgdGl0bGU6IEFjY291bnQgU2VydmljZQogIHZlcnNpb246IDEuMC4wCiAgZGVzY3JpcHRpb246IFRoaXMgc2VydmljZSBpcyBpbiBjaGFyZ2Ugb2YgcHJvY2Vzc2luZyB1c2VyIHNpZ251cHMKY2hhbm5lbHM6CiAgdXNlclNpZ25lZHVwOgogICAgYWRkcmVzczogdXNlci9zaWduZWR1cAogICAgbWVzc2FnZXM6CiAgICAgIFVzZXJTaWduZWRVcDoKICAgICAgICAkcmVmOiAnIy9jb21wb25lbnRzL21lc3NhZ2VzL1VzZXJTaWduZWRVcCcKb3BlcmF0aW9uczoKICBzZW5kVXNlclNpZ25lZHVwOgogICAgYWN0aW9uOiBzZW5kCiAgICBjaGFubmVsOgogICAgICAkcmVmOiAnIy9jaGFubmVscy91c2VyU2lnbmVkdXAnCiAgICBtZXNzYWdlczoKICAgICAgLSAkcmVmOiAnIy9jaGFubmVscy91c2VyU2lnbmVkdXAvbWVzc2FnZXMvVXNlclNpZ25lZFVwJwpjb21wb25lbnRzOgogIG1lc3NhZ2VzOgogICAgVXNlclNpZ25lZFVwOgogICAgICBwYXlsb2FkOgogICAgICAgIHR5cGU6IG9iamVjdAogICAgICAgIHByb3BlcnRpZXM6CiAgICAgICAgICBkaXNwbGF5TmFtZToKICAgICAgICAgICAgdHlwZTogc3RyaW5nCiAgICAgICAgICAgIGRlc2NyaXB0aW9uOiBOYW1lIG9mIHRoZSB1c2VyCiAgICAgICAgICBlbWFpbDoKICAgICAgICAgICAgdHlwZTogc3RyaW5nCiAgICAgICAgICAgIGZvcm1hdDogZW1haWwKICAgICAgICAgICAgZGVzY3JpcHRpb246IEVtYWlsIG9mIHRoZSB1c2Vy" target="_blank">
+  <br>
+  Open in AsyncAPI studio
+</a>
+
+
 
 ## Common Pitfalls
 
