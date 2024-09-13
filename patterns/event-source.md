@@ -1,6 +1,6 @@
 ---
 title: Event Source
-description: 
+description: Event Source or event sourcing in a nutshell is the principle of having a stream of events, each describing the change that is happening.
 ---
 
 # Event Source
@@ -18,7 +18,7 @@ In AsyncAPI there are no way to describe explicitly you are using event source, 
   },
   "channels": {
     "EventSourceOrders": {
-		  "description": "Source for orders",
+      "description": "Source for orders",
       "address": "/orders",
       "messages": {
         "OrderNew": {
