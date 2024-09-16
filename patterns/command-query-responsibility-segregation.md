@@ -3,7 +3,7 @@ title: Command Query Responsibility Segregation (CQRS)
 description: Separation between commands and queries
 ---
 
-## Command Query Responsibility Segregation (CQRS)
+# Command Query Responsibility Segregation (CQRS)
 
 In its most basic form, it's just a separation (segregation) between requests that change data (commands) and requests that query data. For example application 1 handles all the commands and application 2 handles all the queries. Usually because each form has separate performance requirements such as throughput, latency, security, etc.
 
@@ -122,7 +122,7 @@ Application in charge of processing queries:
 ```
 
 
-Further resources:
+## Further resources:
 
 - https://solace.com/event-driven-architecture-patterns/#cqrs
 - https://ibm-cloud-architecture.github.io/refarch-eda/patterns/cqrs/
