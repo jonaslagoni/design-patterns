@@ -122,7 +122,7 @@ Application in charge of processing queries:
 ```
 
 
-Further resources:
+## Further resources:
 
 - https://solace.com/event-driven-architecture-patterns/#cqrs
 - https://ibm-cloud-architecture.github.io/refarch-eda/patterns/cqrs/
