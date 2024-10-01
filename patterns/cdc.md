@@ -11,7 +11,7 @@ In modern systems, data often lives in different places. Keeping all this data u
 
 This is where **Change Data Capture (CDC)** comes in. CDC tracks changes in a database as they happen and sends those changes to other systems. This means everyone always has the latest information, without having to wait for a batch job to run.
 
-![CDC_architecture](./CDC.drawio.png)
+![CDC_architecture](./assets/images/CDC.drawio.png)
 
 
 ## Key Concepts of CDC
@@ -121,7 +121,7 @@ One common mistake is tying CDC events too closely to your database’s structur
 
 ## Relations with Other Patterns
 
-- This can be used in combination with [ECST pattern](/design-patterns/event-carried-state-transfer/), this enable consumers to update their state or react appropriately without needing to fetch additional data
+- This can be used in combination with [ECST pattern](./event-carried-state-transfer.md), this enable consumers to update their state or react appropriately without needing to fetch additional data
 - If you are dealing with data consistency issues in a microservice architecture, you can use CDC in combination with the [transactional outbox pattern](https://newsletter.systemdesigncodex.com/i/141980437/transactional-outbox-pattern-with-cdc)
 - If you are migrating from a monolith application to a microservice you can use the [CDC-Based Strangler Fig Pattern](https://newsletter.systemdesigncodex.com/i/141980437/cdc-based-strangler-fig-pattern) 
 

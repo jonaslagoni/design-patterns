@@ -7,7 +7,7 @@ description: Solving Message Processing Failures
 
 ## Introduction
 
-![Dead Letter Queue](./dlq.png)
+![Dead Letter Queue](./assets/images/dlq.png)
 
 
 In any robust messaging system, failures are inevitable. Messages might be malformed, consumers might crash, or processing logic might fail due to unforeseen data anomalies. To handle such scenarios gracefully, the Dead Letter Queue (DLQ) pattern is employed.
