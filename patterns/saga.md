@@ -10,8 +10,7 @@ How those long-running transaction is coordinated across multiple microservices,
 
 There are two saga types, choreograph and orchestration based. The main difference between the two is how the transaction is coordinated and who is responsible for what. 
 
-![CDC_architecture](./assets/images/saga.webp)
-
+![Saga banner, created by DALL-E](./assets/images/saga.webp)
 
 ## Choreograph based
 Is the decentralized coordination pattern. Each service involved in the transaction is responsible for listening and reacting to events from other services. 
