@@ -19,12 +19,12 @@ For example; The payment service performs a payment and emits a "Payment Success
 Notice how the shipping service is receiving when payment is successful on it's own without a single service handling the transaction.
 
 <table>
-	<tr>
-		<th> Payment service </th> 
-		<th> Shipping service </th>
-	</tr>
-	<tr>
-		<td> 
+<tr>
+<th> Payment service </th> 
+<th> Shipping service </th>
+</tr>
+<tr>
+<td> 
 
 ```json
 {
@@ -115,13 +115,12 @@ For example; The orchestrator calls when an order is received calls the payment 
 Notice how the Orchestrator are interacting with payment and shipping service and receive and send to both, orchestrating when and what happens. 
 
 <table>
-	<tr>
-		<th> Orchestrator </th> 
-		<th> Payment service </th> 
-		<th> Shipping service </th>
-	</tr>
-	<tr>
-  
+<tr>
+<th> Orchestrator </th> 
+<th> Payment service </th> 
+<th> Shipping service </th>
+</tr>
+<tr>
 <td> 
 
 ```json
