@@ -16,21 +16,24 @@ It includes a range of patterns used in EDA with a specific focus on how to desi
 - [X] Basic doc rendering
 - [X] Github pages
 - [X] [Event Sourcing](./event-source.md)
-- [ ] Change Data Capture (CDC)
+- [x] Change Data Capture (CDC)
 
 Communication Patterns
+
 - [ ] Request-Reply
 - [ ] point-to-point
 - [ ] event streaming
 - [ ] Publish-Subscribe pattern
 
 Consumer Scalability / Patterns
+
 - [ ] consumer groups
 - [ ] partitioning
 - [ ] Exclusive Consumer (HA)
 
 Error Handling Patterns
-- [ ] dead letter queue
+
+- [x] dead letter queue
 - [ ] discard
 - [ ] pause and retry
 - [ ] saga
