@@ -10,20 +10,21 @@ title: Introduction
 It includes a range of patterns used in EDA with a specific focus on how to design it with [AsyncAPI](https://www.asyncapi.com/).
 
 ## Roadmap
+Simple roadmap for patterns to document;
 
 - [X] [Add ECST pattern](./event-carried-state-transfer.md)
 - [X] [Add CQRS pattern](./command-query-responsibility-segregation.md)
 - [X] Basic doc rendering
 - [X] Github pages
 - [X] [Event Sourcing](./event-source.md)
-- [x] Change Data Capture (CDC)
+- [X] [Change Data Capture (CDC)](./cdc.md)
 
 Communication Patterns
 
 - [ ] Request-Reply
 - [ ] point-to-point
 - [ ] event streaming
-- [ ] Publish-Subscribe pattern
+- [X] [Publish-Subscribe pattern](./publish-subscribe.md)
 
 Consumer Scalability / Patterns
 
@@ -33,7 +34,7 @@ Consumer Scalability / Patterns
 
 Error Handling Patterns
 
-- [x] dead letter queue
+- [X] [dead letter queue](./dead-letter-queue.md)
 - [ ] discard
 - [ ] pause and retry
-- [ ] saga
+- [X] [saga](./saga.md)
