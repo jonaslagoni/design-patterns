@@ -1,0 +1,900 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Event Carried State Transfer define different verboseness of the message payloads such as fine grained and snapshots.">
+      
+      
+      
+      
+        <link rel="prev" href="../dead-letter-queue/">
+      
+      
+        <link rel="next" href="../event-source/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Event Carried State Transfer (ECST) - EDA Design patterns</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#event-carried-state-transfer-ecst" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="EDA Design patterns" class="md-header__button md-logo" aria-label="EDA Design patterns" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EDA Design patterns
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Event Carried State Transfer (ECST)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="EDA Design patterns" class="md-nav__button md-logo" aria-label="EDA Design patterns" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    EDA Design patterns
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Change Data Capture (CDC) Pattern
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../command-query-responsibility-segregation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Query Responsibility Segregation (CQRS)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dead-letter-queue/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dead Letter Queue (DLQ)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Event Carried State Transfer (ECST)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Event Carried State Transfer (ECST)
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fine-grained" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fine grained
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fine-grained-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fine grained snapshots
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snapshots
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general" class="md-nav__link">
+    <span class="md-ellipsis">
+      General
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Further resources:
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event-source/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Event Source
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pattern-example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    This is a new pattern example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../saga/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Saga pattern
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fine-grained" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fine grained
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fine-grained-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fine grained snapshots
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snapshots
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general" class="md-nav__link">
+    <span class="md-ellipsis">
+      General
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Further resources:
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="event-carried-state-transfer-ecst">Event carried state transfer (ECST)</h1>
+<p>counter parts: Event-notification</p>
+<p>Instead of simply saying <code>the address of user x has changed</code>, ECST means events carry related information with it, to become more verbose, so it tells exactly what changed <code>user x has a new address y and the old address was z</code>. It is a way of sharing data across systems, so it becomes a question of how much data/information do you want each event to contain? </p>
+<p>It splits out into two at least 3 approaches, fine grained (<a href="../glossary/">Delta events</a>), fine grained snapshots and snapshots (fat events).</p>
+<h3 id="fine-grained">Fine grained</h3>
+<p>Fine grained is the smallest amount of data that can be send using ECST, which simply answers "what has specifically changed?".</p>
+<ul>
+<li>Good when services each has a copy of the data and just need to apply the change them self</li>
+</ul>
+<p>Example for <code>Fine Grained payload</code> structure:</p>
+<pre><code class="language-json">{
+  &quot;addressId&quot;: &quot;12366&quot;,
+  &quot;oldState&quot;: {
+    &quot;addressLine1&quot;: &quot;84 Baker Street&quot;
+  },
+  &quot;newState&quot;: {
+    &quot;addressLine1&quot;: &quot;48 Baker Street&quot;
+  }
+}
+</code></pre>
+<h3 id="fine-grained-snapshots">Fine grained snapshots</h3>
+<p>Fine grained snapshots include a all the information about the object that changed so you always have access to the complete picture in the event.</p>
+<ul>
+<li>Good if you debug event streams (without the context of applications) to full picture of the state.</li>
+</ul>
+<p>Example for <code>Fine grained snapshots</code> payload structure:</p>
+<pre><code class="language-json">{
+  &quot;addressId&quot;: &quot;12366&quot;,
+  &quot;oldState&quot;: {
+    &quot;addressContent&quot;: {
+      &quot;addressPurpose&quot;: &quot;billing&quot;,
+      &quot;addressLine1&quot;: &quot;84 Baker Street&quot;,
+      &quot;addressLine2&quot;: &quot;London, UK, E1 7AE&quot;,
+      &quot;addressTS&quot;: 1572134105
+    }
+  },
+  &quot;newState&quot;: {
+    &quot;addressContent&quot;: {
+      &quot;addressPurpose&quot;: &quot;billing&quot;,
+      &quot;addressLine1&quot;: &quot;48 Baker Street&quot;,
+      &quot;addressLine2&quot;: &quot;London, UK, E1 7AE&quot;,
+      &quot;addressTS&quot;: 1572134205
+    }
+  }
+}
+</code></pre>
+<h3 id="snapshots">Snapshots</h3>
+<p>Snapshots take a further step back, and look at the greater object that address belongs to, for example customer, and give you the current snapshot of that state of that object. That way you only need to look at the event itself to know the state of the entity.</p>
+<p>Example for <code>Snapshot</code> payload structure:</p>
+<pre><code class="language-json">{
+  &quot;customerId&quot;: &quot;911000100&quot;,
+  &quot;oldState&quot;: {
+    &quot;addressContent&quot;: {
+      &quot;addresses&quot;: [
+        {
+          &quot;addressId&quot;: &quot;12366&quot;,
+          &quot;addressPurpose&quot;: &quot;billing&quot;,
+          &quot;addressLine1&quot;: &quot;84 Baker Street&quot;,
+          &quot;addressLine2&quot;: &quot;London, UK, E1 7AE&quot;,
+          &quot;addressTS&quot;: 1572134105
+        },
+        {
+          &quot;addressId&quot;: &quot;123124&quot;,
+          &quot;addressPurpose&quot;: &quot;shipping&quot;,
+          &quot;addressLine1&quot;: &quot;44 Infinite Loop&quot;,
+          &quot;addressLine2&quot;: &quot;Cupertino, CA, US, 95014&quot;,
+          &quot;addressTS&quot;: 1452034105
+        },
+        {
+          &quot;addressId&quot;: &quot;123124&quot;,
+          &quot;addressPurpose&quot;: &quot;shipping&quot;,
+          &quot;addressLine1&quot;: &quot;500 George Street&quot;,
+          &quot;addressLine2&quot;: &quot;Sydney, NSW, AU, 2000&quot;,
+          &quot;addressTS&quot;: 1452034105
+        },
+        {
+          &quot;addressId&quot;: &quot;123124&quot;,
+          &quot;addressPurpose&quot;: &quot;shipping&quot;,
+          &quot;addressLine1&quot;: &quot;15 Karl-Liebknecht-Str&quot;,
+          &quot;addressLine2&quot;: &quot;Berlin, DE, 10318&quot;,
+          &quot;addressTS&quot;: 1452034105
+        }
+      ]
+    }
+  },
+  &quot;newState&quot;: {
+    &quot;addressContent&quot;: {
+      &quot;addresses&quot;: [
+        {
+          &quot;addressId&quot;: &quot;12366&quot;,
+          &quot;addressPurpose&quot;: &quot;billing&quot;,
+          &quot;addressLine1&quot;: &quot;48 Baker Street&quot;,
+          &quot;addressLine2&quot;: &quot;London, UK, E1 7AE&quot;,
+          &quot;addressTS&quot;: 1572134205
+        },
+        {
+          &quot;addressId&quot;: &quot;123124&quot;,
+          &quot;addressPurpose&quot;: &quot;shipping&quot;,
+          &quot;addressLine1&quot;: &quot;44 Infinite Loop&quot;,
+          &quot;addressLine2&quot;: &quot;Cupertino, CA, US, 95014&quot;,
+          &quot;addressTS&quot;: 1452034105
+        },
+        {
+          &quot;addressId&quot;: &quot;123124&quot;,
+          &quot;addressPurpose&quot;: &quot;shipping&quot;,
+          &quot;addressLine1&quot;: &quot;500 George Street&quot;,
+          &quot;addressLine2&quot;: &quot;Sydney, NSW, AU, 2000&quot;,
+          &quot;addressTS&quot;: 1452034105
+        },
+        {
+          &quot;addressId&quot;: &quot;123124&quot;,
+          &quot;addressPurpose&quot;: &quot;shipping&quot;,
+          &quot;addressLine1&quot;: &quot;15 Karl-Liebknecht-Str&quot;,
+          &quot;addressLine2&quot;: &quot;Berlin, DE, 10318&quot;,
+          &quot;addressTS&quot;: 1452034105
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<h2 id="general">General</h2>
+<p>You must make sure that the consumers are <a href="../glossary/">idempotent</a> as processing the same event carries message means that the "local" data might change unexpected. Some brokers already have something like this build in if they support <a href="../glossary/">exactly-once delivery</a>.</p>
+<blockquote>
+<p>As seen in the examples, the more verbose the event becomes, the more complex it is to extract the data and the more expensive it is to send over the wire</p>
+</blockquote>
+<p>With more verbose events, the more <a href="../glossary/">PII</a> comes into play.</p>
+<p>You will have <a href="../glossary/">eventual-consistency</a> across producer/data owner - and consumers (and even across consumers). "This inconsistency may only last for a few milliseconds but, in a high-traffic system that sends out thousands of ECS messages, the likelihood of an inconsistent read increases rapidly." (https://blogs.mulesoft.com/api-integration/strategy/event-carried-state-messages/)</p>
+<p>Example AsyncAPI document for a consumer:</p>
+<pre><code class="language-json">{
+  &quot;asyncapi&quot;: &quot;3.0.0&quot;,
+  &quot;info&quot;: {
+    &quot;title&quot;: &quot;Account Service&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;
+  },
+  &quot;channels&quot;: {
+    &quot;addressChanged&quot;: {
+      &quot;address&quot;: &quot;/address&quot;,
+      &quot;messages&quot;: {
+        &quot;FineGrained&quot;: {
+          &quot;$ref&quot;: &quot;#/components/messages/FineGrained&quot;
+        },
+        &quot;FineGrainedSnapshots&quot;: {
+          &quot;$ref&quot;: &quot;#/components/messages/FineGrainedSnapshots&quot;
+        },
+        &quot;Snapshots&quot;: {
+          &quot;$ref&quot;: &quot;#/components/messages/Snapshots&quot;
+        }
+      }
+    }
+  },
+  &quot;operations&quot;: {
+    &quot;addressChanged&quot;: {
+      &quot;action&quot;: &quot;receive&quot;,
+      &quot;channel&quot;: {
+        &quot;$ref&quot;: &quot;#/channels/addressChanged&quot;
+      }
+    }
+  },
+  &quot;components&quot;: {
+    &quot;schemas&quot;: {
+      &quot;PartialAddress&quot;: {
+        &quot;type&quot;: &quot;object&quot;,
+        &quot;properties&quot;: {
+          &quot;addressPurpose&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;addressLine1&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;addressLine2&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;addressTS&quot;: {
+            &quot;type&quot;: &quot;number&quot;
+          }
+        }
+      },
+      &quot;FullAddress&quot;: {
+        &quot;type&quot;: &quot;object&quot;,
+        &quot;required&quot;: [
+          &quot;addressPurpose&quot;,
+          &quot;addressLine1&quot;,
+          &quot;addressLine2&quot;,
+          &quot;addressTS&quot;
+        ],
+        &quot;properties&quot;: {
+          &quot;addressPurpose&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;addressLine1&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;addressLine2&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;addressTS&quot;: {
+            &quot;type&quot;: &quot;number&quot;
+          }
+        }
+      },
+      &quot;SnapshotAddress&quot;: {
+        &quot;type&quot;: &quot;object&quot;,
+        &quot;required&quot;: [
+          &quot;addresses&quot;
+        ],
+        &quot;properties&quot;: {
+          &quot;addresses&quot;: {
+            &quot;type&quot;: &quot;array&quot;,
+            &quot;items&quot;: {
+              &quot;type&quot;: &quot;object&quot;,
+              &quot;required&quot;: [
+                &quot;addressId&quot;,
+                &quot;addressPurpose&quot;,
+                &quot;addressLine1&quot;,
+                &quot;addressLine2&quot;,
+                &quot;addressTS&quot;
+              ],
+              &quot;properties&quot;: {
+                &quot;addressId&quot;: {
+                  &quot;type&quot;: &quot;string&quot;
+                },
+                &quot;addressPurpose&quot;: {
+                  &quot;type&quot;: &quot;string&quot;
+                },
+                &quot;addressLine1&quot;: {
+                  &quot;type&quot;: &quot;string&quot;
+                },
+                &quot;addressLine2&quot;: {
+                  &quot;type&quot;: &quot;string&quot;
+                },
+                &quot;addressTS&quot;: {
+                  &quot;type&quot;: &quot;number&quot;
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    &quot;messages&quot;: {
+      &quot;FineGrained&quot;: {
+        &quot;description&quot;: &quot;Fine grained ESCT pattern, notice the optional properties for the states&quot;,
+        &quot;payload&quot;: {
+          &quot;type&quot;: &quot;object&quot;,
+          &quot;properties&quot;: {
+            &quot;addressId&quot;: {
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;oldState&quot;: {
+              &quot;$ref&quot;: &quot;#/components/schemas/PartialAddress&quot;
+            },
+            &quot;newState&quot;: {
+              &quot;$ref&quot;: &quot;#/components/schemas/PartialAddress&quot;
+            }
+          }
+        }
+      },
+      &quot;FineGrainedSnapshots&quot;: {
+        &quot;description&quot;: &quot;Fine grained snapshot ESCT pattern, notice the required properties for the states&quot;,
+        &quot;payload&quot;: {
+          &quot;type&quot;: &quot;object&quot;,
+          &quot;properties&quot;: {
+            &quot;addressId&quot;: {
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;oldState&quot;: {
+              &quot;$ref&quot;: &quot;#/components/schemas/FullAddress&quot;
+            },
+            &quot;newState&quot;: {
+              &quot;$ref&quot;: &quot;#/components/schemas/FullAddress&quot;
+            }
+          }
+        }
+      },
+      &quot;Snapshots&quot;: {
+        &quot;description&quot;: &quot;Snapshot ESCT pattern, notice the `customerId` in the root, and `addressId` in the state&quot;,
+        &quot;payload&quot;: {
+          &quot;type&quot;: &quot;object&quot;,
+          &quot;properties&quot;: {
+            &quot;customerId&quot;: {
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;oldState&quot;: {
+              &quot;$ref&quot;: &quot;#/components/schemas/SnapshotAddress&quot;
+            },
+            &quot;newState&quot;: {
+              &quot;$ref&quot;: &quot;#/components/schemas/SnapshotAddress&quot;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h2 id="further-resources">Further resources:</h2>
+<ul>
+<li>https://medium.com/swlh/event-notification-vs-event-carried-state-transfer-2e4fdf8f6662</li>
+<li>https://solace.com/event-driven-architecture-patterns/</li>
+<li>https://blogs.mulesoft.com/api-integration/strategy/event-carried-state-messages/</li>
+<li>https://itnext.io/the-event-carried-state-transfer-pattern-aae49715bb7f</li>
+<li>https://eda-visuals.boyney.io/visuals/eventual-consistency</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

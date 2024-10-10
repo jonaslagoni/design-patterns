@@ -1,0 +1,803 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Solving Message Processing Failures">
+      
+      
+      
+      
+        <link rel="prev" href="../command-query-responsibility-segregation/">
+      
+      
+        <link rel="next" href="../event-carried-state-transfer/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Dead Letter Queue (DLQ) - EDA Design patterns</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dead-letter-queue-dlq" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="EDA Design patterns" class="md-header__button md-logo" aria-label="EDA Design patterns" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EDA Design patterns
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Dead Letter Queue (DLQ)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="EDA Design patterns" class="md-nav__button md-logo" aria-label="EDA Design patterns" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    EDA Design patterns
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Change Data Capture (CDC) Pattern
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../command-query-responsibility-segregation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Query Responsibility Segregation (CQRS)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Dead Letter Queue (DLQ)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Dead Letter Queue (DLQ)
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Concepts
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-it-can-be-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where it can be used ?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asyncapi-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      AsyncAPI Specification
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common pitfalls
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relations-with-other-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relations with Other Patterns
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event-carried-state-transfer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Event Carried State Transfer (ECST)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event-source/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Event Source
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pattern-example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    This is a new pattern example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../saga/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Saga pattern
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Concepts
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-it-can-be-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where it can be used ?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asyncapi-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      AsyncAPI Specification
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common pitfalls
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relations-with-other-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relations with Other Patterns
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="dead-letter-queue-dlq">Dead Letter Queue (DLQ)</h1>
+<h2 id="introduction">Introduction</h2>
+<p><img alt="Dead Letter Queue" src="../assets/images/dlq.png" /></p>
+<p>In any robust messaging system, failures are inevitable. Messages might be malformed, consumers might crash, or processing logic might fail due to unforeseen data anomalies. To handle such scenarios gracefully, the Dead Letter Queue (DLQ) pattern is employed.</p>
+<p>The primary challenge addressed by the DLQ pattern is the handling of messages that cannot be processed successfully. Without a mechanism to manage these problematic messages, they can clog the main queue, leading to processing delays and potential system outages. The DLQ pattern ensures that:</p>
+<ul>
+<li><strong>Unprocessable messages are isolated</strong>: Faulty messages are moved to a separate queue to prevent them from hindering the processing of valid messages.</li>
+<li><strong>System resilience is enhanced</strong>: By offloading problematic messages, the system can continue operating smoothly without manual intervention.</li>
+<li><strong>Error analysis is facilitated</strong>: Storing failed messages allows developers to inspect and understand the root causes of failures.</li>
+</ul>
+<h2 id="key-concepts">Key Concepts</h2>
+<ul>
+<li><strong>Dead Letter Queue (DLQ)</strong>: A dedicated queue that stores messages which failed to process after a predefined number of attempts.</li>
+<li><strong>Poison Messages</strong>: Messages that consistently cause processing failures due to issues like invalid format or unexpected content.</li>
+<li><strong>Retry Mechanism</strong>: The strategy of reattempting message processing before relegating it to the DLQ.</li>
+<li><strong>Message Acknowledgment</strong>: A confirmation sent by the consumer to the broker indicating successful message processing.</li>
+<li><strong>Back-off Strategies</strong>: Techniques to progressively delay retry attempts, often used to prevent overwhelming a failing service.</li>
+</ul>
+<h2 id="where-it-can-be-used">Where it can be used ?</h2>
+<p>The DLQ pattern is applicable in any asynchronous messaging system where message processing reliability is crucial. Common use cases include:</p>
+<ul>
+<li><strong>Microservices architectures</strong>: Ensuring that one service's failure doesn't cascade to others.</li>
+<li><strong>Event-driven systems</strong>: Handling events that cannot be processed immediately due to temporary issues.</li>
+<li><strong>Integration platforms</strong>: Managing message flows between disparate systems where data inconsistencies might occur.</li>
+</ul>
+<h2 id="example">Example</h2>
+<p>Let's consider an e-commerce order processing system that uses a message queue to handle incoming orders. Here's an example of how a Dead Letter Queue might be implemented:</p>
+<ol>
+<li>
+<p><strong>Order Processing</strong>:</p>
+<ul>
+<li>An order message is received and processed by the <code>OrderProcessor</code> service.</li>
+<li>The <code>OrderProcessor</code> service validates the order and calculates shipping costs.</li>
+<li>If the order is valid, it is sent to the <code>ShippingService</code> for further processing.</li>
+<li>If the order is invalid, it is sent to the DLQ.</li>
+</ul>
+</li>
+<li>
+<p><strong>Shipping Service</strong>:</p>
+<ul>
+<li>The <code>ShippingService</code> service receives the order message and attempts to process it.</li>
+<li>If the order is valid, it is sent to the <code>ShippingService</code> for further processing.</li>
+<li>If the order is invalid, it is sent to the DLQ.</li>
+</ul>
+</li>
+<li>
+<p><strong>DLQ</strong>:</p>
+<ul>
+<li>The DLQ service receives the order message and stores it.</li>
+<li>The DLQ service also tracks the number of attempts to process the message.</li>
+<li>If the message has been retried multiple times, it is sent to an external system for manual inspection.</li>
+</ul>
+</li>
+<li>
+<p><strong>Monitoring and Analysis</strong>:</p>
+<ul>
+<li>The DLQ service provides an interface for monitoring and analyzing failed messages.</li>
+<li>Developers can use this interface to understand the root causes of failures and improve the system's reliability.</li>
+</ul>
+</li>
+</ol>
+<p>This example illustrates how a DLQ can be used to isolate and manage messages that cannot be processed successfully. By implementing this pattern, the e-commerce order processing system can ensure that faulty messages do not affect the processing of valid orders and can be analyzed and resolved to prevent future failures.</p>
+<h2 id="asyncapi-specification">AsyncAPI Specification</h2>
+<p>Here's an AsyncAPI specification that demonstrates the Dead Letter Queue pattern:</p>
+<pre><code class="language-yaml">asyncapi: 3.0.0
+info:
+  title: Order Processing Service
+  version: 1.0.0
+channels:
+  order/created:
+    address: order/created
+    messages:
+      subscribe.message:
+        $ref: '#/components/messages/OrderCreated'
+  order/dlq:
+    address: order/dlq
+    messages:
+      publish.message:
+        $ref: '#/components/messages/OrderFailed'
+operations:
+  order/created.subscribe:
+    action: send
+    channel:
+      $ref: '#/channels/order~1created'
+    messages:
+      - $ref: '#/channels/order~1created/messages/subscribe.message'
+  order/dlq.publish:
+    action: receive
+    channel:
+      $ref: '#/channels/order~1dlq'
+    messages:
+      - $ref: '#/channels/order~1dlq/messages/publish.message'
+components:
+  messages:
+    OrderCreated:
+      payload:
+        type: object
+        properties:
+          orderId:
+            type: string
+          items:
+            type: array
+            items:
+              type: string
+    OrderFailed:
+      payload:
+        type: object
+        properties:
+          originalMessage:
+            type: object
+          errorDetails:
+            type: string
+</code></pre>
+<h2 id="common-pitfalls">Common pitfalls</h2>
+<ul>
+<li><strong>Infinite Retry Loops</strong>: Without a cap on retry attempts, messages can cause endless processing cycles.</li>
+<li><strong>DLQ Overload</strong>: Neglecting DLQ monitoring can lead to storage issues if the queue grows uncontrollably.</li>
+<li><strong>No Reprocessing Strategy</strong>: Failing to plan for DLQ message handling can negate the benefits of capturing failed messages.</li>
+<li><strong>Security Risks</strong>: Storing sensitive data in DLQs without proper encryption or access controls can lead to compliance violations.</li>
+</ul>
+<h2 id="relations-with-other-patterns">Relations with Other Patterns</h2>
+<ul>
+<li><strong><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/retry">Retry Pattern</a></strong>: Works hand-in-hand with DLQ, allowing systems to attempt processing before giving up.</li>
+<li><strong><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker">Circuit Breaker Pattern</a></strong>: Prevents a system from repeatedly trying to process messages when a service is known to be down.</li>
+<li><strong><a href="https://www.codecentric.de/wissens-hub/blog/resilience-design-patterns-retry-fallback-timeout-circuit-breaker">Fallback Pattern</a></strong>: Provides alternative processing logic when the primary method fails.</li>
+<li><strong><a href="https://www.enterpriseintegrationpatterns.com/patterns/messaging/Filter.html">Message Filtering Pattern</a></strong>: Filters out unprocessable messages early to reduce load on the system.</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Dead-letter_queue">Dead Letter Queue</a></li>
+<li><a href="https://www.ibm.com/docs/en/power8?topic=systems-implementing-dead-letter-queue-pattern-microservices-architecture">Implementing the Dead Letter Queue Pattern in a Microservices Architecture</a></li>
+<li><a href="https://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html">DeadLetterChannel</a></li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>The Dead Letter Queue pattern is a critical component in building resilient messaging systems.By understanding and applying the DLQ pattern, developers can create systems that not only handle failures gracefully but also provide avenues for diagnosing and rectifying underlying issues, ultimately leading to more stable and reliable applications.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
