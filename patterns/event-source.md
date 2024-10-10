@@ -8,6 +8,8 @@ In a nutshell it is the principle of having a stream of events, each describing 
 
 Event Source is in its nature append-only, meaning that events once entered the stream cannot change, only be appended. If the data is not append-only, you allow to modify, delete, or reorder those events it would make it an Mutable Event Log. 
 
+![event sourcing banner, created by DALL-E](./assets/images/event-source.webp)
+
 NOTICE: Event Source and [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource), is two different things, the first is a design pattern, the second is a the interface for [server-sent-events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)
 
 In AsyncAPI there are no way to describe explicitly you are using event source, except through meta data such as `description` and `summary`. However, one might look like the following:
