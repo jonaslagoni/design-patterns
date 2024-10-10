@@ -24,7 +24,7 @@ Communication Patterns
 - [ ] Request-Reply
 - [ ] point-to-point
 - [ ] event streaming
-- [ ] Publish-Subscribe pattern
+- [X] [Publish-Subscribe pattern](./publish-subscribe.md)
 
 Consumer Scalability / Patterns
 
