@@ -1,6 +1,7 @@
 ---
 title: Event Source
 description: Event Source or event sourcing in a nutshell is the principle of having a stream of events, each describing the change that is happening.
+date: 2024-01-31T12:00:00
 ---
 
 # Event Source

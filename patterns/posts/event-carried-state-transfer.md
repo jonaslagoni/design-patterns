@@ -1,6 +1,7 @@
 ---
 title: Event Carried State Transfer (ECST)
 description: Event Carried State Transfer define different verboseness of the message payloads such as fine grained and snapshots.
+date: 2024-01-31T12:00:00
 ---
 
 # Event carried state transfer (ECST)
@@ -9,7 +10,7 @@ counter parts: Event-notification
 
 Instead of simply saying `the address of user x has changed`, ECST means events carry related information with it, to become more verbose, so it tells exactly what changed `user x has a new address y and the old address was z`. It is a way of sharing data across systems, so it becomes a question of how much data/information do you want each event to contain? 
 
-It splits out into two at least 3 approaches, fine grained ([Delta events](./glossary.md)), fine grained snapshots and snapshots (fat events).
+It splits out into two at least 3 approaches, fine grained ([Delta events](../glossary.md)), fine grained snapshots and snapshots (fat events).
 
 ### Fine grained
 Fine grained is the smallest amount of data that can be send using ECST, which simply answers "what has specifically changed?".

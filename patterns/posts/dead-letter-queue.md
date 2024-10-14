@@ -1,13 +1,14 @@
 ---
 title: Dead Letter Queue (DLQ)
 description: Solving Message Processing Failures
+date: 2024-01-31T12:00:00
 ---
 
 # Dead Letter Queue (DLQ)
 
 ## Introduction
 
-![Dead Letter Queue](./assets/images/dlq.png)
+![Dead Letter Queue](../assets/images/dlq.png)
 
 
 In any robust messaging system, failures are inevitable. Messages might be malformed, consumers might crash, or processing logic might fail due to unforeseen data anomalies. To handle such scenarios gracefully, the Dead Letter Queue (DLQ) pattern is employed.

@@ -1,4 +1,39 @@
 site_name: EDA Design patterns
+site_description: EDA Design patterns for AsyncAPI
+site_url: https://jonaslagoni.github.io/design-patterns/
+repo_url: https://github.com/jonaslagoni/design-patterns/
+repo_name: design-patterns
+edit_uri: blob/main/patterns/
 theme:
   name: material
+  custom_dir: overrides
+  features:
+    - navigation.indexes
 docs_dir: patterns
+plugins: 
+  - search
+  - social
+  - blog:
+      archive: false
+      blog_dir: .
+      post_dir: "{blog}"
+      post_date_format: full
+  - rss:
+      match_path: patterns/posts/.* 
+      date_from_meta:
+        as_creation: date
+      categories:
+        - categories
+        - tags 
+hooks:
+  - hooks/socialmedia.py
+markdown_extensions:
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      name: EDA Design patterns
+      link: https://github.com/jonaslagoni/design-patterns/

@@ -1,13 +1,14 @@
 ---
 title: Command Query Responsibility Segregation (CQRS)
 description: Separation between commands and queries
+date: 2024-01-31T12:00:00
 ---
 
 # Command Query Responsibility Segregation (CQRS)
 
 In its most basic form, it's just a separation (segregation) between requests that change data (commands) and requests that query data. For example application 1 handles all the commands and application 2 handles all the queries. Usually because each form has separate performance requirements such as throughput, latency, security, etc.
 
-Because read and write happens in different places, one of the drawbacks is having consistency between queries and commands as they lag behind, also called [eventual consistency](./glossary.md).
+Because read and write happens in different places, one of the drawbacks is having consistency between queries and commands as they lag behind, also called [eventual consistency](../glossary.md).
 
 Application in charge of processing commands:
 ```json
