@@ -21,7 +21,7 @@ Simple roadmap for patterns to document;
 
 Communication Patterns
 
-- [ ] Request-Reply
+- [X] [Request-Reply](./request-and-reply.md)
 - [ ] point-to-point
 - [ ] event streaming
 - [ ] Publish-Subscribe pattern
