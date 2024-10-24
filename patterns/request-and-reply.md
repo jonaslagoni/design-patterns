@@ -20,7 +20,7 @@ In request and reply there are always two parties, the requester, making the req
 <tr>
 <td> 
 
-```diff
+```json
 {
   "asyncapi": "3.0.0",
   "info": {
@@ -32,24 +32,24 @@ In request and reply there are always two parties, the requester, making the req
     "StartShipping": {
       "address": "shipping/start",
       "messages": {
-        "StartShipping": {
-          "$ref": "#/components/messages/StartShipping"
+        "StartShippingRequest": {
+          "$ref": "#/components/messages/StartShippingRequest"
         },
-        "StartShippingReply": {
-          "$ref": "#/components/messages/StartShippingReply"
+        "StartShippingResponse": {
+          "$ref": "#/components/messages/StartShippingResponse"
         }
       }
     }
   },
   "operations": {
     "StartShippingRequest": {
-+     "action": "send",
+      "action": "send",
       "channel": {
         "$ref": "#/channels/StartShipping"
       },
       "messages": [
         {
-          "$ref": "#/channels/ping/messages/StartShipping"
+          "$ref": "#/channels/ping/messages/StartShippingRequest"
         }
       ],
       "reply": {
@@ -58,7 +58,7 @@ In request and reply there are always two parties, the requester, making the req
         },
         "messages": [
           {
-            "$ref": "#/channels/ping/messages/StartShippingReply"
+            "$ref": "#/channels/ping/messages/StartShippingResponse"
           }
         ]
       }
@@ -71,7 +71,7 @@ In request and reply there are always two parties, the requester, making the req
 
 <td>
 
-```diff
+```json
 {
   "asyncapi": "3.0.0",
   "info": {
@@ -85,14 +85,14 @@ In request and reply there are always two parties, the requester, making the req
     }
   },
   "operations": {
-    "StartShippingResponse": {
-+     "action": "receive",
+    "StartShippingReply": {
+      "action": "receive",
       "channel": {
         "$ref": "#/channels/StartShipping"
       },
       "messages": [
         {
-          "$ref": "#/channels/ping/messages/StartShipping"
+          "$ref": "#/channels/ping/messages/StartShippingRequest"
         }
       ],
       "reply": {
@@ -101,7 +101,7 @@ In request and reply there are always two parties, the requester, making the req
         },
         "messages": [
           {
-            "$ref": "#/channels/ping/messages/StartShippingReply"
+            "$ref": "#/channels/ping/messages/StartShippingResponse"
           }
         ]
       }
@@ -126,28 +126,35 @@ One pattern is where the response needs to happen dynamically based on meta info
 
 Locations for this could be part of the headers, message payload or parameter.
 
-```diff
+<table>
+<tr>
+<th> Payload </th> 
+<th> Headers </th> 
+</tr>
+<tr>
+<td> 
+
+```json
 {
   "asyncapi": "3.0.0",
   "info": {
     "title": "Payment service",
-    "version": "1.0.0",
-    "description": "Example with a requester that initiates the request/reply pattern where the reply will happen on whatever is defined in the header `replyTo` of the request."
+    "version": "1.0.0"
   },
   "channels": {
-    "StartShipping": {
+    "StartShippingRequest": {
       "address": "shipping/start",
       "messages": {
-        "StartShipping": {
-          "$ref": "#/components/messages/StartShipping"
+        "StartShippingRequest": {
+          "$ref": "#/components/messages/StartShippingRequest"
         },
       }
     },
-    "StartShippingResponse": {
+    "StartShippingReply": {
       "address": null,
       "messages": {
-        "StartShippingReply": {
-          "$ref": "#/components/messages/StartShippingReply"
+        "StartShippingResponse": {
+          "$ref": "#/components/messages/StartShippingResponse"
         }
       }
     }
@@ -156,23 +163,165 @@ Locations for this could be part of the headers, message payload or parameter.
     "StartShippingRequest": {
       "action": "send",
       "channel": {
-        "$ref": "#/channels/StartShipping"
+        "$ref": "#/channels/StartShippingRequest"
       },
       "reply": {
-+       "address": {
-+         "description": "The reply address is dynamically determined based on the request header `replyTo`",
-+         "location": "$message.header#/replyTo"
-        },
+        "address": {
+          "description": "The reply address is dynamically determined
+          based on the request header `replyTo`",
+          "location": "$message.payload#/replyTo"
+         },
         "channel": {
-          "$ref": "#/channels/StartShippingResponse"
+          "$ref": "#/channels/StartShippingReply"
         }
       }
     }
   },
+  "components": {
+    "messages": {
+      "StartShippingRequest": {
+        "payload": {
+          "type": "object",
+          "properties": {
+            "replyTo": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
   ...
 }
 ```
+</td>
 
+<td> 
+
+```json
+{
+  "asyncapi": "3.0.0",
+  "info": {
+    "title": "Payment service",
+    "version": "1.0.0"
+  },
+  "channels": {
+    "StartShippingRequest": {
+      "address": "shipping/start",
+      "messages": {
+        "StartShippingRequest": {
+          "$ref": "#/components/messages/StartShippingRequest"
+        },
+      }
+    },
+    "StartShippingReply": {
+      "address": null,
+      "messages": {
+        "StartShippingResponse": {
+          "$ref": "#/components/messages/StartShippingResponse"
+        }
+      }
+    }
+  },
+  "operations": {
+    "StartShippingRequest": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/StartShippingRequest"
+      },
+      "reply": {
+        "address": {
+          "description": "The reply address is dynamically determined
+          based on the request header `replyTo`",
+          "location": "$message.header#/replyTo"
+        },
+        "channel": {
+          "$ref": "#/channels/StartShippingReply"
+        }
+      }
+    }
+  },
+  "components": {
+    "messages": {
+      "StartShippingRequest": {
+        "headers": {
+          "type": "object",
+          "properties": {
+            "replyTo": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+</td>
+</tr>
+</table>
+
+
+### Multiple messages over the same channel
+This pattern is a common one in WebSocket, where multiple different messages flow through the same connection,  
+
+<table>
+<tr>
+<th> WebSocket </th> 
+</tr>
+<tr>
+<td> 
+
+> Simulating a request and reply scenario, where we expect a specific message results in another over the same connection.
+
+```json
+{
+  "asyncapi": "3.0.0",
+  "info": {
+    "title": "WebSocket request/reply example",
+    "version": "1.0.0"
+  },
+  "channels": {
+    "rootChannel": {
+      "address": "/",
+      "messages": {
+        "StartShippingRequest": {
+          "$ref": "#/components/messages/StartShippingRequest"
+        },
+        "StartShippingResponse": {
+          "$ref": "#/components/messages/StartShippingResponse"
+        }
+      }
+    }
+  },
+  "operations": {
+    "StartShippingRequest": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/rootChannel"
+      },
+      "messages": [
+        {
+          "$ref": "/components/messages/StartShippingRequest"
+        }
+      ],
+      "reply": {
+        "messages": [
+          {
+            "$ref": "/components/messages/StartShippingResponse"
+          }
+        ],
+        "channel": {
+          "$ref": "#/channels/rootChannel"
+        }
+      }
+    }
+  }
+}
+```
+</td>
+</tr>
+</table>
 
 # Resources
 
